@@ -1,18 +1,13 @@
 import React from "react";
 import { Button } from "semantic-ui-react";
 
-function ButtonGroup() {
+function ButtonGroup(props) {
   return (
-    <div
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        margin: "2%",
-        textAlign: "center",
-      }}
-    >
-      <Button positive>Search</Button>
-      <Button active>Clear</Button>
+    <div style={props.styling}>
+      <Button onClick={() => props.toggleMethod(props.one)} positive>
+        {props.one}
+      </Button>
+      <Button onClick={() => props.toggleMethod(props.two)}>{props.two}</Button>
     </div>
   );
 }
