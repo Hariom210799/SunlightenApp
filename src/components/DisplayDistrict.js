@@ -75,88 +75,92 @@ export default class DisplayArea extends Component {
 
   render() {
     return (
-      <div style={this.props.styling}>
-        <Table sortable celled fixed>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "state" ? this.state.direction : null
-                }
-                onClick={() => this.handleSortClick("state")}
-              >
-                District Name
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "confirmed"
-                    ? this.state.direction
-                    : null
-                }
-                onClick={() => this.handleSortClick("confirmed")}
-              >
-                Confirmed
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "active" ? this.state.direction : null
-                }
-                onClick={() => this.handleSortClick("active")}
-              >
-                Active
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "recovered"
-                    ? this.state.direction
-                    : null
-                }
-                onClick={() => this.handleSortClick("recovered")}
-              >
-                Recovered
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "deceased" ? this.state.direction : null
-                }
-                onClick={() => this.handleSortClick("deceased")}
-              >
-                Deceased
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  this.state.column === "share" ? this.state.direction : null
-                }
-                // onClick={}
-              >
-                Share Details
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {this.state.data_arr.length ? (
-              this.state.data_arr.map((item, index) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>{item.district_name}</Table.Cell>
-                    <Table.Cell>{item.confirmed}</Table.Cell>
-                    <Table.Cell>{item.active}</Table.Cell>
-                    <Table.Cell>{item.recovered}</Table.Cell>
-                    <Table.Cell>{item.deceased}</Table.Cell>
-                    <Table.Cell>
-                      <Icon name="share" />
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })
-            ) : (
+      <div>
+        <div>
+          <Table sortable celled fixed>
+            <Table.Header>
               <Table.Row>
-                <Table.Cell>No Data</Table.Cell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "state" ? this.state.direction : null
+                  }
+                  onClick={() => this.handleSortClick("state")}
+                >
+                  District Name
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "confirmed"
+                      ? this.state.direction
+                      : null
+                  }
+                  onClick={() => this.handleSortClick("confirmed")}
+                >
+                  Confirmed
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "active" ? this.state.direction : null
+                  }
+                  onClick={() => this.handleSortClick("active")}
+                >
+                  Active
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "recovered"
+                      ? this.state.direction
+                      : null
+                  }
+                  onClick={() => this.handleSortClick("recovered")}
+                >
+                  Recovered
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "deceased"
+                      ? this.state.direction
+                      : null
+                  }
+                  onClick={() => this.handleSortClick("deceased")}
+                >
+                  Deceased
+                </Table.HeaderCell>
+                <Table.HeaderCell
+                  sorted={
+                    this.state.column === "share" ? this.state.direction : null
+                  }
+                  // onClick={}
+                >
+                  Share Details
+                </Table.HeaderCell>
               </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
+            </Table.Header>
+
+            <Table.Body>
+              {this.state.data_arr.length ? (
+                this.state.data_arr.map((item, index) => {
+                  return (
+                    <Table.Row key={index}>
+                      <Table.Cell>{item.district_name}</Table.Cell>
+                      <Table.Cell>{item.confirmed}</Table.Cell>
+                      <Table.Cell>{item.active}</Table.Cell>
+                      <Table.Cell>{item.recovered}</Table.Cell>
+                      <Table.Cell>{item.deceased}</Table.Cell>
+                      <Table.Cell>
+                        <Icon name="share" />
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell>No Data</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     );
   }

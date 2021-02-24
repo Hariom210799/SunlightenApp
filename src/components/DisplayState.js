@@ -1,18 +1,19 @@
 import React, { Component } from "react";
-import axios from "axios";
-import { Table, Icon, Button } from "semantic-ui-react";
+import {
+  Form,
+  Input,
+  Header,
+  Modal,
+  Table,
+  Icon,
+  Button,
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import DistrictModal from "./DistrictModal";
 import DisplayDistrict from "./DisplayDistrict";
+import Iframe from "react-iframe";
 const jsonConverter = require("json-array-converter");
-var _ = require("lodash");
-
-var config = {
-  method: "get",
-  url: "https://api.covid19india.org/state_district_wise.json",
-  headers: {
-    // 'Content-Type': 'application/json'
-  },
-};
+// var _ = require("lodash");
 
 export default class DisplayArea extends Component {
   constructor(props) {
@@ -22,65 +23,17 @@ export default class DisplayArea extends Component {
       stateData: {},
       direction: null,
       column: null,
-      data_arr: [],
+      data_arr: this.props.data.slice(),
       temp: [],
       touched: false,
       modalData: [],
       modal: false,
       flag: true,
+      mailModal: false,
+      sendingData: null,
+      email: "",
+      state_name: "",
     };
-  }
-
-  async FetchData() {
-    let arr1 = [],
-      arr2 = [];
-
-    await axios(config)
-      .then(function (response) {
-        // setStateData(jsonConverter.toArray(response.data));
-        // this.setState({ stateData: response.data });
-
-        Object.keys(response.data).forEach((k) => {
-          Object.keys(response.data[k].districtData).forEach((v) => {
-            arr1.push({
-              district_name: v,
-              ...response.data[k].districtData[v],
-            });
-          });
-          arr2.push({
-            state: k,
-            districts: arr1,
-            ...response.data[k],
-          });
-          arr1 = [];
-        });
-
-        arr2.forEach((i) => delete i.districtData);
-        arr2.forEach((i) => {
-          i.active = 0;
-          i.confirmed = 0;
-          i.deceased = 0;
-          i.recovered = 0;
-          i.districts.forEach((x) => {
-            i.active = i.active + x.active;
-            i.confirmed = i.confirmed + x.confirmed;
-            i.deceased = i.deceased + x.deceased;
-            i.recovered = i.recovered + x.recovered;
-          });
-        });
-        delete arr2[0];
-        console.log("DATAARRAY", arr2.length);
-        console.log("DATAARRAY", arr2);
-        console.log("Data Saved");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    this.setState({ data_arr: arr2 });
-  }
-
-  componentDidMount() {
-    this.FetchData();
   }
 
   handleSortClick(col_name) {
@@ -118,17 +71,60 @@ export default class DisplayArea extends Component {
 
     this.setState({
       column: col_name,
-      data_arr: sorted,
-      // data_arr: sorted,
+      data_arr: sorted.slice(),
       direction: "ascending",
     });
-    this.forceUpdate();
+    // this.forceUpdate();
     // console.log("SORTED: ", this.state.data_arr);
   }
 
+  handleEmailChange(value) {
+    this.setState({ email: value });
+  }
+
+  sendEmail(data, mailid) {
+    var sgMail = require("@sendgrid/mail");
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: ` ${mailid}`, // Change to your recipient
+      from: "s17_ukalkar_jayesh@mgmcen.ac.in", // Change to your verified sender
+      subject: `Covid19 ${data.state} Details`,
+      text: "and easy to do anywhere, even with Node.js",
+      html: `<strong>${data}</strong>`,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  componentDidMount() {}
+
   render() {
+    var arr = this.state.data_arr;
+    // console.log("PROPS REDCEIDI:", this.state.data_arr);
     return (
       <div style={this.props.styling}>
+        {this.state.flag ? (
+          <Link to="/mapofindia">
+            <Button
+              positive
+              icon
+              labelPosition="right"
+              style={{ margin: "1%" }}
+              // onClick={}
+            >
+              <Icon name="right arrow" />
+              MAP OF INDIA
+            </Button>
+          </Link>
+        ) : (
+          <></>
+        )}
         {this.state.flag ? (
           <Table sortable celled fixed>
             <Table.Header>
@@ -191,7 +187,7 @@ export default class DisplayArea extends Component {
             </Table.Header>
 
             <Table.Body>
-              {this.state.data_arr ? (
+              {this.state.data_arr.length ? (
                 this.state.data_arr.map((item, index) => {
                   return (
                     <Table.Row key={item.statecode}>
@@ -202,6 +198,7 @@ export default class DisplayArea extends Component {
                           this.setState({
                             modalData: item.districts,
                             // modal: true,
+                            state_name: item.state,
                             flag: false,
                           })
                         }
@@ -213,7 +210,19 @@ export default class DisplayArea extends Component {
                       <Table.Cell>{item.recovered}</Table.Cell>
                       <Table.Cell>{item.deceased}</Table.Cell>
                       <Table.Cell>
-                        <Icon name="share" />
+                        <Button
+                          icon
+                          labelPosition="right"
+                          onClick={() =>
+                            this.setState({
+                              mailModal: true,
+                              sendingData: item,
+                            })
+                          }
+                        >
+                          Share via Mail
+                          <Icon name="share" />
+                        </Button>
                       </Table.Cell>
                     </Table.Row>
                   );
@@ -237,7 +246,18 @@ export default class DisplayArea extends Component {
               <Icon name="arrow left" />
               GO BACK
             </Button>
-            <DisplayDistrict data={this.state.modalData} />
+            <Button
+              negative
+              style={{ margin: "1%" }}
+              onClick={() => this.setState({ mapModal: true })}
+            >
+              Visualize on Map
+            </Button>
+            <DisplayDistrict
+              mapModal={this.state.mapModal}
+              data={this.state.modalData}
+              statename={this.state.state_name}
+            />
           </>
         )}
 
@@ -245,6 +265,68 @@ export default class DisplayArea extends Component {
           districtData={this.state.modalData}
           modal={this.state.modal}
         /> */}
+        <Modal
+          closeIcon
+          open={this.state.mailModal}
+          // trigger={<Button>Show Modal</Button>}
+          onClose={() => this.setState({ mailModal: false, email: "" })}
+          onOpen={() => this.setState({ mailModal: true })}
+        >
+          <Header icon="mail" content="Share Covid Data via Mail" />
+          <Modal.Content>
+            <Form>
+              <Form.Input
+                placeholder="Name"
+                name="name"
+                value={this.state.email}
+                onChange={(e) => this.setState({ email: e.target.value })}
+              />
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              color="red"
+              onClick={() => this.setState({ mailModal: false, email: "" })}
+            >
+              <Icon name="remove" /> Cancel
+            </Button>
+            <Button
+              color="green"
+              onClick={() => {
+                this.sendEmail(this.state.sendingData, this.state.email);
+                this.setState({ mailModal: false, email: "" });
+              }}
+            >
+              <Icon name="send" /> Send Email
+            </Button>
+          </Modal.Actions>
+        </Modal>
+
+        <Modal
+          open={this.state.mapModal}
+          onClose={() => this.setState({ mapModal: false })}
+          onOpen={() => this.setState({ mapModal: true })}
+          trigger={<Button>Scrolling Content Modal</Button>}
+        >
+          <Modal.Header>Profile Picture</Modal.Header>
+          <Modal.Content image scrolling>
+            <Iframe
+              // url="https://maps.mapmyindia.com/corona"
+              url={`https://maps.mapmyindia.com/corona/${this.state.state_name}?state_corona_stats&lat=26.8749616&lng=75.7361819&zoom=9`}
+              width="100%"
+              height="600px"
+              // id="myId"
+              // className="myClassname"
+              // display="initial"
+              // position="relative"
+            />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button onClick={() => this.setState({ mapModal: false })}>
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </div>
     );
   }
