@@ -130,14 +130,14 @@ export default class DisplayArea extends Component {
                 >
                   Deceased
                 </Table.HeaderCell>
-                <Table.HeaderCell
+                {/* <Table.HeaderCell
                   sorted={
                     this.state.column === "share" ? this.state.direction : null
                   }
                   // onClick={}
                 >
                   Share Details
-                </Table.HeaderCell>
+                </Table.HeaderCell> */}
               </Table.Row>
             </Table.Header>
 
@@ -151,9 +151,9 @@ export default class DisplayArea extends Component {
                       <Table.Cell>{item.active}</Table.Cell>
                       <Table.Cell>{item.recovered}</Table.Cell>
                       <Table.Cell>{item.deceased}</Table.Cell>
-                      <Table.Cell>
+                      {/* <Table.Cell>
                         <Icon name="share" />
-                      </Table.Cell>
+                      </Table.Cell> */}
                     </Table.Row>
                   );
                 })
