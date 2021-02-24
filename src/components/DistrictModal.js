@@ -10,9 +10,9 @@ const DistrictModal = (props) => {
       open={open}
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
-      trigger={<Button>Scrolling Content Modal</Button>}
+      // trigger={<Button>Scrolling Content Modal</Button>}
     >
-      <Modal.Header>Profile Picture</Modal.Header>
+      <Modal.Header>Map</Modal.Header>
       <Modal.Content image scrolling>
         <Image size="medium" src="/images/wireframe/image.png" wrapped />
 

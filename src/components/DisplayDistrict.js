@@ -23,6 +23,7 @@ export default class DisplayArea extends Component {
       data_arr: this.props.data,
       temp: [],
       touched: false,
+      state_name: this.props.state_name,
     };
   }
 
@@ -76,6 +77,9 @@ export default class DisplayArea extends Component {
   render() {
     return (
       <div>
+        <div style={{ margin: "1%" }}>
+          <h3>{this.state.state_name} Statistics</h3>
+        </div>
         <div>
           <Table sortable celled fixed>
             <Table.Header>

@@ -175,14 +175,14 @@ export default class DisplayArea extends Component {
                 >
                   Deceased
                 </Table.HeaderCell>
-                <Table.HeaderCell
+                {/* <Table.HeaderCell
                   sorted={
                     this.state.column === "share" ? this.state.direction : null
                   }
                   // onClick={}
                 >
                   Share Details
-                </Table.HeaderCell>
+                </Table.HeaderCell> */}
               </Table.Row>
             </Table.Header>
 
@@ -256,15 +256,11 @@ export default class DisplayArea extends Component {
             <DisplayDistrict
               mapModal={this.state.mapModal}
               data={this.state.modalData}
-              statename={this.state.state_name}
+              state_name={this.state.state_name}
             />
           </>
         )}
 
-        {/* <DistrictModal
-          districtData={this.state.modalData}
-          modal={this.state.modal}
-        /> */}
         <Modal
           closeIcon
           open={this.state.mailModal}
@@ -306,12 +302,11 @@ export default class DisplayArea extends Component {
           open={this.state.mapModal}
           onClose={() => this.setState({ mapModal: false })}
           onOpen={() => this.setState({ mapModal: true })}
-          trigger={<Button>Scrolling Content Modal</Button>}
+          // trigger={<Button>Scrolling Content Modal</Button>}
         >
-          <Modal.Header>Profile Picture</Modal.Header>
+          <Modal.Header>Map</Modal.Header>
           <Modal.Content image scrolling>
             <Iframe
-              // url="https://maps.mapmyindia.com/corona"
               url={`https://maps.mapmyindia.com/corona/${this.state.state_name}?state_corona_stats&lat=26.8749616&lng=75.7361819&zoom=9`}
               width="100%"
               height="600px"
