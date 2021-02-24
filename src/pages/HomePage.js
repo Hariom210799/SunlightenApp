@@ -93,7 +93,7 @@ export default class HomePage extends Component {
           Covid19 Data Tracker
         </Header>
 
-        {loading ? <SearchArea /> : <SearchArea data={this.state.data} />}
+        {/* {loading ? <SearchArea /> : <SearchArea data={this.state.data} />} */}
         {/* <ButtonGrp styling={{
         flex: 1,
         flexDirection: "row",

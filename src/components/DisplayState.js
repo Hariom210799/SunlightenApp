@@ -209,7 +209,7 @@ export default class DisplayArea extends Component {
                       <Table.Cell>{item.active}</Table.Cell>
                       <Table.Cell>{item.recovered}</Table.Cell>
                       <Table.Cell>{item.deceased}</Table.Cell>
-                      <Table.Cell>
+                      {/* <Table.Cell>
                         <Button
                           icon
                           labelPosition="right"
@@ -223,7 +223,7 @@ export default class DisplayArea extends Component {
                           Share via Mail
                           <Icon name="share" />
                         </Button>
-                      </Table.Cell>
+                      </Table.Cell> */}
                     </Table.Row>
                   );
                 })
